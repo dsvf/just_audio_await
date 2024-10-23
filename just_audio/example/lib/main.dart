@@ -92,7 +92,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
             children: [
               Playbutton(_player),
               // Display play/pause button and volume/speed sliders.
-              ControlButtons(_player),
+              //ControlButtons(_player),
               // Display seek bar. Using StreamBuilder, this widget rebuilds
               // each time the position, buffered position or duration changes.
               StreamBuilder<PositionData>(
@@ -125,6 +125,7 @@ class Playbutton extends StatefulWidget {
 }
 
 class _PlaybuttonState extends State<Playbutton> {
+  Color? color;
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -132,15 +133,17 @@ class _PlaybuttonState extends State<Playbutton> {
           var player = widget.player;
           var S = Stopwatch()..start();
           player.setAsset("audio/testfile.webm.aac").then((_) {
+            setState(() => color = Colors.yellow);
             print(
                 "@t=${(S.elapsedMicroseconds.toDouble() / 1e6).toStringAsFixed(6).padLeft(10)}s: loaded asset");
             player.play().then((_) {
+              setState(() => color = null);
               print(
                   "@t=${(S.elapsedMicroseconds.toDouble() / 1e6).toStringAsFixed(6).padLeft(10)}s: play completed");
             });
           });
         },
-        icon: const Icon(Icons.volume_up));
+        icon: Icon(Icons.volume_up, color: color));
   }
 }
 
