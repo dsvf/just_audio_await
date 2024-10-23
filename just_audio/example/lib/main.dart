@@ -90,6 +90,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Playbutton(_player),
               // Display play/pause button and volume/speed sliders.
               ControlButtons(_player),
               // Display seek bar. Using StreamBuilder, this widget rebuilds
@@ -112,6 +113,34 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+}
+
+class Playbutton extends StatefulWidget {
+  final AudioPlayer player;
+  const Playbutton(this.player, {super.key});
+
+  @override
+  State<Playbutton> createState() => _PlaybuttonState();
+}
+
+class _PlaybuttonState extends State<Playbutton> {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          var player = widget.player;
+          var S = Stopwatch()..start();
+          player.setAsset("audio/testfile.webm.aac").then((_) {
+            print(
+                "@t=${(S.elapsedMicroseconds.toDouble() / 1e6).toStringAsFixed(6).padLeft(10)}s: loaded asset");
+            player.play().then((_) {
+              print(
+                  "@t=${(S.elapsedMicroseconds.toDouble() / 1e6).toStringAsFixed(6).padLeft(10)}s: play completed");
+            });
+          });
+        },
+        icon: const Icon(Icons.volume_up));
   }
 }
 
